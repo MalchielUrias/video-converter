@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+  serviceName: "not-applicable"
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3-management
+        ports:
+        - containerPort: 15672
+          name: http
+          protocol: TCP 
+        - containerPort: 567
+          name: amqp
+          protocol: TCP 
+        envFrom:
+        - configMapRef:
+            name: rabbitmq-configmap
+        - secretRef:
+            name: rabbitmq-secret
+        volumeMounts:
+        - name: rabbitmq-volume
+          mountPath: "/var/lib/rabbitmq"
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq-pvc
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: standard
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+spec:
+  type: ClusterIP
+  selector:
+    app: rabbitmq
+  ports:
+  - port: 15672
+    targetPort: 15672                                        
+    protocol: TCP
+  - port: 5672
+    targetPort: 5672                                        
+    protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rabbitmq-ingress
+spec:
+  rules:
+  - host: rabbitmq-manager.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: rabbitmq
+            port: 
+              number: 15672
+

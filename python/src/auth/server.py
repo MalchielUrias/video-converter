@@ -14,7 +14,7 @@ server.config["MYSQL_PORT"] = os.environ.get("MYSQL_PORT")
 
 @server.route("/login", methods=["POST"])
 def login():
-    auth = requests.authorization # this auth object gives us access to email and password from the basic authentication header
+    auth = request.authorization # this auth object gives us access to email and password from the basic authentication header
     if not auth:
         return "missing credentials", 401
     
@@ -39,7 +39,7 @@ def login():
 
 @server.route("/validate", method=["POST"])
 def validate():
-    encoded_jwt = requests.headers["Authorization"] # pull encoded jwt from request
+    encoded_jwt = request.headers["Authorization"] # pull encoded jwt from request
 
     if not encoded_jwt:
         return "missing credentials", 401

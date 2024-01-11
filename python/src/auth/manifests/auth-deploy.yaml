@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: auth 
-          image: edurias/auth  
+          image: edurias/auth:latest 
           ports: 
             - containerPort: 5000
           envFrom:

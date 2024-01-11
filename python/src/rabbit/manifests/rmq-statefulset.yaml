@@ -30,19 +30,19 @@ spec:
         volumeMounts:
         - name: rabbitmq-volume
           mountPath: "/var/lib/rabbitmq"
-  volume:
-  - name: rabbitmq-volume
-    persistenVolumeClaim:
-      claimName: rabbitmq-pvc
-  volumeClaimTemplates:
-  - metadata:
-      name: rabbitmq-pvc
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
-      storageClassName: standard
+      volume:
+      - name: rabbitmq-volume
+        persistenVolumeClaim:
+          claimName: rabbitmq-pvc
+      volumeClaimTemplates:
+      - metadata:
+          name: rabbitmq-pvc
+        spec:
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 1Gi
+          storageClassName: standard
 ---
 apiVersion: v1
 kind: Service
@@ -54,9 +54,11 @@ spec:
     app: rabbitmq
   ports:
   - port: 15672
+    name: http
     targetPort: 15672                                        
     protocol: TCP
   - port: 5672
+    name: amqp
     targetPort: 5672                                        
     protocol: TCP
 ---

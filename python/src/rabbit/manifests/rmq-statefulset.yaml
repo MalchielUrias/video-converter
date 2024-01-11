@@ -34,15 +34,18 @@ spec:
       - name: rabbitmq-volume
         persistentVolumeClaim:
           claimName: rabbitmq-pvc
-  volumeClaimTemplates:
-  - metadata:
-      name: rabbitmq-pvc
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
-      storageClassName: standard
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rabbitmq-pvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
 ---
 apiVersion: v1
 kind: Service

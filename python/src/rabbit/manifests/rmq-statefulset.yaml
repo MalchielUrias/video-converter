@@ -30,6 +30,10 @@ spec:
         volumeMounts:
         - name: rabbitmq-volume
           mountPath: "/var/lib/rabbitmq"
+  volume:
+  - name: rabbitmq-volume
+    persistenVolumeClaim:
+      claimName: rabbitmq-pvc
   volumeClaimTemplates:
   - metadata:
       name: rabbitmq-pvc

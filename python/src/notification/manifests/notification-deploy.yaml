@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: notification
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 8
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+      - name: notification
+        image: edurias/notification:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        envFrom:
+          - configMapRef:
+              name: notification-congifmap
+          - secretRef:
+              name: notification-secret
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notification-configmap
+data:
+  MP3_QUEUE: "mp3"
+  VIDEO_QUEUE: "video"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: notification-secret
+type: Opaque
+stringData:
+  GMAIL_ADDRESS: "malchieltest@gmail.com"
+  GMAIL_PASSWORD: "None"
+
+

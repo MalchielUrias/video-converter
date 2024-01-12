@@ -1,17 +1,9 @@
 import pika, sys, os, time
-from pymongo import MongoClient
-import gridfs
-from convert import to_mp3
+from send import email 
+
 
 def main():
-    client = MongoClient("host", 27017) # MongoDB host. Not to be deployed in cluster
-    db_Videos = client.Videos
-    db_mp3 = client.mp3s
-
-    # gridfs
-    fs_Videos = gridfs.GridFS(db_Videos)
-    fs_mp3s = gridfs.GridFS(db_mp3) 
-
+    
     # rabbitmq connection
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(host="rabbitmq") 
@@ -20,7 +12,7 @@ def main():
 
     # callback function
     def callback(ch, method, properties, body):
-        err = to_mp3.start(body, fs_Videos, fs_mp3s, ch) 
+        err = email.notification(body) 
         if err:
             ch.basic_nack(delivery_tag=method.delivery_tag) 
         else:
@@ -28,7 +20,7 @@ def main():
 
 
     channel.basic_consume(
-        queue=os.environ.get("VIDEO_QUEUE"), on_message_callback=callback # consume messages from video queue
+        queue=os.environ.get("MP3_QUEUE"), on_message_callback=callback # consume messages from video queue
     )
 
     print("Waiting for messages. To exit press CTRL+C")

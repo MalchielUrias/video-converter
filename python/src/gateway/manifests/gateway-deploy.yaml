@@ -60,5 +60,14 @@ spec:
             name: gateway
             port: 
               number: 8080
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: rabbitmq
+            port: 
+              number: 15672
 
 

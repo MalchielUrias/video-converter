@@ -10,12 +10,12 @@ server = Flask(__name__)
 
 mongo_Video = PyMongo(
     server, 
-    uri="mongodb://host.minikube.internal:27017/videos"
+    uri="mongodb://34.39.5.118:27017/videos"
     )
 
 mongo_mp3 = PyMongo(
     server,
-    uri="mongodb://host.minikube.internal:27017/audio"
+    uri="mongodb://34.39.5.118:27017/audio"
 )
 
 fs_Videos = gridfs.GridFS(mongo_Video.db) # max file size for documents is 16MB, GridFS uses sharding to allow storin above limit

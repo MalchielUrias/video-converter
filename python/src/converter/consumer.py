@@ -4,7 +4,7 @@ import gridfs
 from convert import to_mp3
 
 def main():
-    client = MongoClient("host", 27017) # MongoDB host. Not to be deployed in cluster
+    client = MongoClient("34.39.5.118", 27017) # MongoDB host. Not to be deployed in cluster
     db_Videos = client.Videos
     db_mp3 = client.mp3s
 
